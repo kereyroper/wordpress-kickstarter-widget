@@ -37,7 +37,7 @@ class kickstarter_widget{
 
     public function add_plugin_page(){
         // This page will be under "Settings"
-	add_options_page('Kickstarter Widget Settings', 'Kickstarter Widget', 'manage_options', 'kickstarter-widget-settings', array($this, 'create_admin_page'));
+	add_options_page('Kickstarter Widget Settings', 'Kickstarter Widget', 'manage_options', 'kickstarter_widget_settings', array($this, 'create_admin_page'));
     }
 
     public function create_admin_page(){
@@ -47,8 +47,8 @@ class kickstarter_widget{
         <h2>Kickstarter widget</h2>
         <form method="post" action="options.php">
             <?php
-            settings_fields('kickstarter-widget-group');
-            do_settings_sections('kickstarter-widget-settings');
+            settings_fields('kickstarter_widget_group');
+            do_settings_sections('kickstarter_widget_settings');
             submit_button(); ?>
         </form>
         </div>
@@ -56,20 +56,20 @@ class kickstarter_widget{
     }
 
     public function page_init(){
-	register_setting('kickstarter-widget-group', 'kickstarter_settings', array($this, 'check_id'));
+	register_setting('kickstarter_widget_group', 'kickstarter_settings', array($this, 'check_id'));
 
         add_settings_section(
 	    'setting_section_id',
 	    'Setting',
 	    array($this, 'print_section_info'),
-	    'kickstarter-widget-settings'
+	    'kickstarter_widget_settings'
 	);
 
 	add_settings_field(
 	    'kickstarter_url',
 	    'Kickstarter URL',
 	    array($this, 'create_an_id_field'),
-	    'kickstarter-widget-settings',
+	    'kickstarter_widget_settings',
 	    'setting_section_id'
 	);
     }
