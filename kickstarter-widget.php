@@ -111,9 +111,10 @@ class kickstarter_widget{
         extract($args);
         echo $before_widget;
         echo $before_title . 'Kickstarter Widget' . $after_title;
+        $protocol = is_ssl() ? "https" : "http";
         ?>
         <div id="kickstarter_widget_container">
-            <iframe frameborder="0" height="380px" src="http://www.kickstarter.com<?=get_option('kickstarter_url');?>/widget/card.html" width="220px"></iframe>
+            <iframe frameborder="0" height="380px" src="<?=$protocol?>://www.kickstarter.com<?=get_option('kickstarter_url');?>/widget/card.html" width="220px"></iframe>
         </div>
         <?php
         echo $after_widget;
