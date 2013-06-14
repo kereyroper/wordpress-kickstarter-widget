@@ -26,3 +26,78 @@ License: GPL2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 ?>
+<?php
+class kickstarter_widget{
+    public function __construct(){
+        if(is_admin()){
+	    add_action('admin_menu', array($this, 'add_plugin_page'));
+	    add_action('admin_init', array($this, 'page_init'));
+	}
+    }
+
+    public function add_plugin_page(){
+        // This page will be under "Settings"
+	add_options_page('Kickstarter Widget Settings', 'Kickstarter Widget', 'manage_options', 'kickstarter-widget-settings', array($this, 'create_admin_page'));
+    }
+
+    public function create_admin_page(){
+        ?>
+        <div class="wrap">
+        <?php screen_icon(); ?>
+        <h2>Kickstarter widget</h2>
+        <form method="post" action="options.php">
+            <?php
+            settings_fields('kickstarter-widget-group');
+            do_settings_sections('kickstarter-widget-settings');
+            submit_button(); ?>
+        </form>
+        </div>
+    <?php
+    }
+
+    public function page_init(){
+	register_setting('kickstarter-widget-group', 'kickstarter_settings', array($this, 'check_id'));
+
+        add_settings_section(
+	    'setting_section_id',
+	    'Setting',
+	    array($this, 'print_section_info'),
+	    'kickstarter-widget-settings'
+	);
+
+	add_settings_field(
+	    'kickstarter_url',
+	    'Kickstarter URL',
+	    array($this, 'create_an_id_field'),
+	    'kickstarter-widget-settings',
+	    'setting_section_id'
+	);
+    }
+
+    public function check_id($input){
+	$url = parse_url($input['kickstarter_url']);
+        if(!empty($url['path'])){
+	    $mid = $url['path'];
+	    if(get_option('kickstarter_url') === FALSE){
+		add_option('kickstarter_url', $mid);
+	    }else{
+		update_option('kickstarter_url', $mid);
+	    }
+	}else{
+	    $mid = '';
+	}
+	return $mid;
+    }
+
+    public function print_section_info(){
+	print 'Enter your Kickstarter Project URL below:';
+    }
+
+    public function create_an_id_field(){
+        ?><input type="text" id="kickstarter_url" name="kickstarter_settings[kickstarter_url]" value="<?=get_option('kickstarter_url');?>" /><?php
+    }
+}
+
+$kickstarter_widget = new kickstarter_widget();
+?>
+
