@@ -32,12 +32,21 @@ class kickstarter_widget{
         if(is_admin()){
 	    add_action('admin_menu', array($this, 'add_plugin_page'));
 	    add_action('admin_init', array($this, 'page_init'));
+            $plugin = plugin_basename(__FILE__);
+            add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
 	}
     }
 
     public function add_plugin_page(){
         // This page will be under "Settings"
 	add_options_page('Kickstarter Widget Settings', 'Kickstarter Widget', 'manage_options', 'kickstarter_widget_settings', array($this, 'create_admin_page'));
+    }
+
+    // Add settings link on plugin page
+    function plugin_settings_link($links) {
+        $settings_link = '<a href="options-general.php?page=kickstarter_widget_settings">Settings</a>';
+        array_unshift($links, $settings_link);
+        return $links;
     }
 
     public function create_admin_page(){
