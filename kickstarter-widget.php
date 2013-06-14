@@ -35,6 +35,7 @@ class kickstarter_widget{
             $plugin = plugin_basename(__FILE__);
             add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
 	}
+        wp_register_sidebar_widget('kickstarter_widget', 'Kickstarter Widget', array($this, 'widget'));
     }
 
     public function add_plugin_page(){
@@ -104,6 +105,18 @@ class kickstarter_widget{
 
     public function create_an_id_field(){
         ?><input type="text" id="kickstarter_url" name="kickstarter_settings[kickstarter_url]" value="<?=get_option('kickstarter_url');?>" /><?php
+    }
+
+    public function widget($args){
+        extract($args);
+        echo $before_widget;
+        echo $before_title . 'Kickstarter Widget' . $after_title;
+        ?>
+        <div id="kickstarter_widget_container">
+            <iframe frameborder="0" height="380px" src="http://www.kickstarter.com<?=get_option('kickstarter_url');?>/widget/card.html" width="220px"></iframe>
+        </div>
+        <?php
+        echo $after_widget;
     }
 }
 
